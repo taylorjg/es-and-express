@@ -1,0 +1,11 @@
+{
+  "name": "es-and-express",
+  "description": "Elasticsearch and Express server together in same Docker container",
+  "version": "0.0.1",
+  "main": "index.js",
+  "author": "Jonathan Taylor",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.1"
+  }
+}
