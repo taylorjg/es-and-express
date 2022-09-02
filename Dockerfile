@@ -9,3 +9,8 @@ COPY package-lock.json .
 COPY server server
 
 RUN npm clean-install
+
+COPY entrypoint.sh .
+RUN chmod +x entrypoint.sh
+
+CMD ./entrypoint.sh
