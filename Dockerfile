@@ -6,9 +6,10 @@ RUN apt-get install -y nodejs
 
 COPY package.json .
 COPY package-lock.json .
-COPY server server
-
 RUN npm clean-install
+
+COPY products.json .
+COPY server server
 
 COPY entrypoint.sh .
 RUN chmod +x entrypoint.sh
