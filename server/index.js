@@ -71,8 +71,23 @@ const getCreateProducts = async (req, res) => {
 const getProducts = async (req, res) => {
   const { method, url } = req
   console.log(`${method} ${url}`)
-  const response = await axios.get("http://localhost:9200/products/_search?size=1")
-  res.json(response.data)
+  try {
+    const response = await axios.get("http://localhost:9200/products/_search?size=1")
+    res.json(response.data)
+  } catch (error) {
+    res.json({ errorMessage: error.message })
+  }
+}
+
+const getCat = async (req, res) => {
+  const { method, url } = req
+  console.log(`${method} ${url}`)
+  try {
+    const response = await axios.get("http://localhost:9200/_cat")
+    res.send(response.data)
+  } catch (error) {
+    res.json({ errorMessage: error.message })
+  }
 }
 
 const getWildcard = (req, res) => {
@@ -91,6 +106,7 @@ const main = async () => {
   app.get("/version", getVersion)
   app.get("/create-products", getCreateProducts)
   app.get("/products", getProducts)
+  app.get("/cat", getCat)
   app.get("*", getWildcard)
 
   app.listen(PORT, () => console.log(`Listening on port ${PORT}`))
