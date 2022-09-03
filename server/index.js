@@ -6,7 +6,6 @@ const path = require("path")
 const PORT = process.env.PORT ?? 3045
 
 const range = n => Array.from(Array(n).keys())
-
 const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
 
 const waitForElasticsearchToComeUp = async () => {
@@ -43,16 +42,28 @@ const createProductsIndex = async () => {
   await axios.post("http://localhost:9200/products/washers/_bulk", data, config)
 }
 
+const getProducts = async (req, res) => {
+  const { method, url } = req
+  console.log(`${method} ${url}`)
+  const response = await axios.get("http://localhost:9200/products/_search?size=1")
+  res.json(response.data)
+}
+
+const getWildcard = (req, res) => {
+  const { method, url } = req
+  console.log(`${method} ${url}`)
+  res.send("Hello")
+}
+
 const main = async () => {
   await waitForElasticsearchToComeUp()
   await createProductsIndex()
 
   const app = express()
-  app.get("*", (req, res) => {
-    const { method, url } = req
-    console.log(`${method} ${url}`)
-    res.send("Hello")
-  })
+
+  app.get("/products", getProducts)
+  app.get("*", getWildcard)
+
   app.listen(PORT, () => console.log(`Listening on port ${PORT}`))
 }
 
