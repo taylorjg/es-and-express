@@ -18,4 +18,4 @@ RUN chmod +x entrypoint.sh
 # chroot: cannot change root directory to '/': Operation not permitted
 USER elasticsearch
 
-CMD ["./entrypoint.sh"]
+ENTRYPOINT ["./entrypoint.sh"]
