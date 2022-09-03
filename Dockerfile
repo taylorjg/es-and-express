@@ -1,6 +1,5 @@
 FROM elasticsearch:7.17.6
 
-# RUN apt-get update
 RUN curl -fsSL https://deb.nodesource.com/setup_16.x | bash -
 RUN apt-get install -y nodejs
 
@@ -15,4 +14,3 @@ COPY entrypoint.sh .
 RUN chmod +x entrypoint.sh
 
 CMD ["./entrypoint.sh"]
-# CMD ["node", "server"]

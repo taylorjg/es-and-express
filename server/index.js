@@ -2,6 +2,7 @@ const express = require("express")
 const axios = require("axios")
 const fs = require("fs").promises
 const path = require("path")
+const packageJson = require("../package.json")
 
 const PORT = process.env.PORT ?? 3045
 
@@ -42,6 +43,31 @@ const createProductsIndex = async () => {
   await axios.post("http://localhost:9200/products/washers/_bulk", data, config)
 }
 
+const getHealth = (req, res) => {
+  const { method, url } = req
+  console.log(`${method} ${url}`)
+  res.json({ status: "available" })
+}
+
+const getVersion = (req, res) => {
+  const { method, url } = req
+  console.log(`${method} ${url}`)
+  const { version, description } = packageJson
+  res.json({ version, description })
+}
+
+const getCreateProducts = async (req, res) => {
+  const { method, url } = req
+  console.log(`${method} ${url}`)
+  try {
+    await waitForElasticsearchToComeUp()
+    await createProductsIndex()
+    res.json({ success: true })
+  } catch (error) {
+    res.json({ success: false, errorMessage: error.message })
+  }
+}
+
 const getProducts = async (req, res) => {
   const { method, url } = req
   console.log(`${method} ${url}`)
@@ -61,7 +87,10 @@ const main = async () => {
 
   const app = express()
 
-  // app.get("/products", getProducts)
+  app.get("/health", getHealth)
+  app.get("/version", getVersion)
+  app.get("/create-products", getCreateProducts)
+  app.get("/products", getProducts)
   app.get("*", getWildcard)
 
   app.listen(PORT, () => console.log(`Listening on port ${PORT}`))
