@@ -132,8 +132,8 @@ const getWildcard = (req, res) => {
 }
 
 const main = async () => {
-  // await waitForElasticsearchToComeUp()
-  // await createProductsIndex()
+  await waitForElasticsearchToComeUp()
+  await createProductsIndex()
 
   const app = express()
 

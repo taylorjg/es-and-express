@@ -13,9 +13,9 @@ COPY server server
 COPY entrypoint.sh .
 RUN chmod +x entrypoint.sh
 
-# from /etc/passwd:
-# elasticsearch:x:1000:1000:,,,:/usr/share/elasticsearch:/bin/bash
-# USER 1000:0
+# If we don't do this, we get the following error when running
+# on render.com (but not locally):
+# chroot: cannot change root directory to '/': Operation not permitted
 USER elasticsearch
 
 CMD ["./entrypoint.sh"]
