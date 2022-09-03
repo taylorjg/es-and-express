@@ -132,11 +132,7 @@ const getWildcard = (req, res) => {
 }
 
 const main = async () => {
-  await waitForElasticsearchToComeUp()
-  await createProductsIndex()
-
   const app = express()
-
   app.get("/health", getHealth)
   app.get("/version", getVersion)
   app.get("/create-products", getCreateProducts)
@@ -145,8 +141,10 @@ const main = async () => {
   app.get("/info", getInfo)
   app.get("/logs", getLogs)
   app.get("*", getWildcard)
-
   app.listen(PORT, () => console.log(`Listening on port ${PORT}`))
+
+  await waitForElasticsearchToComeUp()
+  await createProductsIndex()
 }
 
 main()
