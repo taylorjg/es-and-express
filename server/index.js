@@ -53,7 +53,8 @@ const getVersion = (req, res) => {
   const { method, url } = req
   console.log(`${method} ${url}`)
   const { version, description } = packageJson
-  res.json({ version, description })
+  const env = process.env
+  res.json({ version, description, env })
 }
 
 const getCreateProducts = async (req, res) => {
@@ -64,6 +65,7 @@ const getCreateProducts = async (req, res) => {
     await createProductsIndex()
     res.json({ success: true })
   } catch (error) {
+    console.log(`[getCreateProducts] ERROR: ${error.message}`)
     res.json({ success: false, errorMessage: error.message })
   }
 }
@@ -75,6 +77,7 @@ const getProducts = async (req, res) => {
     const response = await axios.get("http://localhost:9200/products/_search?size=1")
     res.json(response.data)
   } catch (error) {
+    console.log(`[getProducts] ERROR: ${error.message}`)
     res.json({ errorMessage: error.message })
   }
 }
@@ -86,6 +89,19 @@ const getCat = async (req, res) => {
     const response = await axios.get("http://localhost:9200/_cat")
     res.send(response.data)
   } catch (error) {
+    console.log(`[getCat] ERROR: ${error.message}`)
+    res.json({ errorMessage: error.message })
+  }
+}
+
+const getInfo = async (req, res) => {
+  const { method, url } = req
+  console.log(`${method} ${url}`)
+  try {
+    const response = await axios.get("http://localhost:9200")
+    res.json(response.data)
+  } catch (error) {
+    console.log(`[getInfo] ERROR: ${error.message}`)
     res.json({ errorMessage: error.message })
   }
 }
@@ -107,6 +123,7 @@ const main = async () => {
   app.get("/create-products", getCreateProducts)
   app.get("/products", getProducts)
   app.get("/cat", getCat)
+  app.get("/info", getInfo)
   app.get("*", getWildcard)
 
   app.listen(PORT, () => console.log(`Listening on port ${PORT}`))
