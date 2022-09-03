@@ -142,9 +142,8 @@ const main = async () => {
   app.get("/logs", getLogs)
   app.get("*", getWildcard)
   app.listen(PORT, () => console.log(`Listening on port ${PORT}`))
-
-  await waitForElasticsearchToComeUp()
-  await createProductsIndex()
+  // await waitForElasticsearchToComeUp()
+  // await createProductsIndex()
 }
 
 main()
