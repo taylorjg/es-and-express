@@ -56,12 +56,12 @@ const getWildcard = (req, res) => {
 }
 
 const main = async () => {
-  await waitForElasticsearchToComeUp()
-  await createProductsIndex()
+  // await waitForElasticsearchToComeUp()
+  // await createProductsIndex()
 
   const app = express()
 
-  app.get("/products", getProducts)
+  // app.get("/products", getProducts)
   app.get("*", getWildcard)
 
   app.listen(PORT, () => console.log(`Listening on port ${PORT}`))
