@@ -13,4 +13,9 @@ COPY server server
 COPY entrypoint.sh .
 RUN chmod +x entrypoint.sh
 
+# from /etc/passwd:
+# elasticsearch:x:1000:1000:,,,:/usr/share/elasticsearch:/bin/bash
+# USER 1000:0
+USER elasticsearch
+
 CMD ["./entrypoint.sh"]
