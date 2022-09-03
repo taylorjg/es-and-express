@@ -106,6 +106,25 @@ const getInfo = async (req, res) => {
   }
 }
 
+const getLogs = async (req, res) => {
+  const { method, url } = req
+  console.log(`${method} ${url}`)
+  try {
+    const fileName1 = path.resolve(__dirname, "..", "es-logs-1.txt")
+    const fileName2 = path.resolve(__dirname, "..", "es-logs-2.txt")
+    const buffer1 = await fs.readFile(fileName1)
+    const buffer2 = await fs.readFile(fileName2)
+    const logs1 = buffer1.toString()
+    const logs2 = buffer2.toString()
+    const divider = "\n" + "-".repeat(80) + "\n"
+    const combinedLogs = logs1 + divider + logs2
+    res.send(combinedLogs)
+  } catch (error) {
+    console.log(`[getLogs] ERROR: ${error.message}`)
+    res.json({ errorMessage: error.message })
+  }
+}
+
 const getWildcard = (req, res) => {
   const { method, url } = req
   console.log(`${method} ${url}`)
@@ -124,6 +143,7 @@ const main = async () => {
   app.get("/products", getProducts)
   app.get("/cat", getCat)
   app.get("/info", getInfo)
+  app.get("/logs", getLogs)
   app.get("*", getWildcard)
 
   app.listen(PORT, () => console.log(`Listening on port ${PORT}`))
