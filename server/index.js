@@ -6,6 +6,10 @@ const packageJson = require("../package.json")
 
 const PORT = process.env.PORT ?? 3045
 
+const ES_URL = "http://localhost:9200"
+
+axios.defaults.baseURL = ES_URL
+
 const range = n => Array.from(Array(n).keys())
 const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
 
@@ -15,7 +19,7 @@ const waitForElasticsearchToComeUp = async () => {
   for (const attempt of attempts) {
     try {
       console.log(`[waitForElasticsearchToComeUp] attempt ${attempt}`)
-      await axios.get("http://localhost:9200")
+      await axios.get()
       console.log("[waitForElasticsearchToComeUp] Elasticsearch is up")
       return
     } catch (error) {
@@ -39,8 +43,8 @@ const createProductsIndex = async () => {
       "content-type": "application/x-ndjson"
     }
   }
-  await axios.put("http://localhost:9200/products")
-  await axios.post("http://localhost:9200/products/washers/_bulk", data, config)
+  await axios.put("/products")
+  await axios.post("/products/washers/_bulk", data, config)
 }
 
 const getHealth = (req, res) => {
@@ -74,7 +78,7 @@ const getProducts = async (req, res) => {
   const { method, url } = req
   console.log(`${method} ${url}`)
   try {
-    const response = await axios.get("http://localhost:9200/products/_search?size=1")
+    const response = await axios.get("/products/_search?size=1")
     res.json(response.data)
   } catch (error) {
     console.log(`[getProducts] ERROR: ${error.message}`)
@@ -86,7 +90,7 @@ const getCat = async (req, res) => {
   const { method, url } = req
   console.log(`${method} ${url}`)
   try {
-    const response = await axios.get("http://localhost:9200/_cat")
+    const response = await axios.get("/_cat")
     res.send(response.data)
   } catch (error) {
     console.log(`[getCat] ERROR: ${error.message}`)
@@ -98,7 +102,7 @@ const getInfo = async (req, res) => {
   const { method, url } = req
   console.log(`${method} ${url}`)
   try {
-    const response = await axios.get("http://localhost:9200")
+    const response = await axios.get()
     res.json(response.data)
   } catch (error) {
     console.log(`[getInfo] ERROR: ${error.message}`)
